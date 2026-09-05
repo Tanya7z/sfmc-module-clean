@@ -1,0 +1,15 @@
+{
+  "poll_interval_seconds": 60,
+  "item_threshold_warning": 200,
+  "countdown_seconds": 10,
+  "kill_list": [
+    "minecraft:xp_orb",
+    "minecraft:tnt"
+  ],
+  "recycle_bin": {
+    "enabled": true,
+    "dimension": "minecraft:overworld",
+    "container_coords": [0, 64, 0],
+    "max_slots": 54
+  }
+}

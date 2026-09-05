@@ -1,0 +1,35 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/gh/DogeLakeDev/ScriptsForMinecraftServer@latest/modules/sdk/%40sfmc-sdk/schemas/sapi-manifest.v2.schema.json",
+  "schemaVersion": 2,
+  "id": "clean",
+  "name": "掉落物清理",
+  "configKey": "clean",
+  "enabledByDefault": true,
+  "canDisable": true,
+  "requires": ["area"],
+  "permissions": [
+    "config:read:clean",
+    "command:clean",
+    "service:clean.trigger",
+    "service:area.registerFeature",
+    "service:area.byName"
+  ],
+  "services": {
+    "provides": [
+      {
+        "name": "clean.trigger",
+        "input": {
+          "type": "object"
+        },
+        "output": {
+          "type": "object"
+        }
+      }
+    ],
+    "requires": [
+      { "name": "area.registerFeature" },
+      { "name": "area.byName" }
+    ]
+  },
+  "notes": "全服掉落物阈值巡检 + area.clean 特性；超限 10s 倒计时；常规入 recycle_bin，高危/经验球销毁。"
+}
