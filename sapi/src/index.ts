@@ -53,10 +53,15 @@ async function loadConfig(): Promise<void> {
   setCleanConfig(normalizeCleanConfig(raw));
 }
 
-async function resolveScopeByAreaName(areaName: string): Promise<CleanScope | null> {
+async function resolveScopeByAreaName(
+  areaName: string,
+): Promise<CleanScope | null> {
   try {
-    const area = (await service.call("area.byName", { name: areaName })) as AreaByNameResult | null;
-    if (!area || !area.name || !area.dimension || !area.start || !area.end) return null;
+    const area = (await service.call("area.byName", {
+      name: areaName,
+    })) as AreaByNameResult | null;
+    if (!area || !area.name || !area.dimension || !area.start || !area.end)
+      return null;
     return {
       areaName: area.name,
       dimension: area.dimension,
@@ -107,7 +112,8 @@ async function handleTrigger(input: Record<string, unknown>): Promise<{
   cleanedCount: number;
 }> {
   const force = input.force === true;
-  const areaName = typeof input.areaName === "string" ? input.areaName.trim() : "";
+  const areaName =
+    typeof input.areaName === "string" ? input.areaName.trim() : "";
   let scope: CleanScope = {};
   if (areaName) {
     const resolved = await resolveScopeByAreaName(areaName);
@@ -117,6 +123,26 @@ async function handleTrigger(input: Record<string, unknown>): Promise<{
   return triggerClean({ force, scope });
 }
 
+function registerCommands(): void {
+  Command.register(
+    "clean",
+    "clean.admin",
+    (player: Player | undefined) => {
+      const result = triggerClean({ force: false, scope: {} });
+      if (player) {
+        if (result.ok) Msg.success("已启动掉落物清理流程", player);
+        else Msg.error("清理启动失败（配置未就绪）", player);
+      } else {
+        debug.i("Clean", `控制台触发 clean ok=${result.ok}`);
+      }
+    },
+    "手动触发全服掉落物清理",
+    MODULE_ID,
+  );
+}
+
+registerCommands();
+
 ModuleRegistry.register({
   id: MODULE_ID,
   afterWorldLoad: true,
@@ -124,23 +150,6 @@ ModuleRegistry.register({
     registerPermissions() {
       // 设计 OP(3) → SDK Permission.Admin
       Permission.register("clean.admin", Permission.Admin);
-    },
-    registerCommands() {
-      Command.register(
-        "clean",
-        "clean.admin",
-        (player: Player | undefined) => {
-          const result = triggerClean({ force: false, scope: {} });
-          if (player) {
-            if (result.ok) Msg.success("已启动掉落物清理流程", player);
-            else Msg.error("清理启动失败（配置未就绪）", player);
-          } else {
-            debug.i("Clean", `控制台触发 clean ok=${result.ok}`);
-          }
-        },
-        "手动触发全服掉落物清理",
-        MODULE_ID,
-      );
     },
     registerEvents() {
       // 规范要求在 registerEvents 挂接；area 的 provide 在 afterWorldLoad init，
