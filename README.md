@@ -5,9 +5,9 @@ Wave C official SFMC module: **clean**（区域与全服掉落物预警清理）
 ## Develop
 
 ```bash
-npm install
-npm run typecheck
-npm test
+pnpm install
+pnpm run typecheck
+pnpm run test
 ```
 
 Install into platform:
