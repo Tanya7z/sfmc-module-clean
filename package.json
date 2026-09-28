@@ -1,6 +1,6 @@
 {
   "name": "@sfmc-bds/module-clean",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "packageManager": "pnpm@10.8.0",
   "type": "module",
   "description": "SAPI module: 掉落物预警与回收清理",
@@ -51,4 +51,3 @@
     "node": ">=22.13.0"
   }
 }
-
